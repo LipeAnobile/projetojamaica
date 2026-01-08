@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto Jamaica | Reggae Roots no Litoral Norte</title>
+    <!-- Tailwind CSS para agilidade e design responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --reggae-green: #2d5a27;
+            --reggae-yellow: #f4b400;
+            --reggae-red: #d62828;
+            --reggae-dark: #0a0a0a;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--reggae-dark);
+            color: #f5f5f5;
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .reggae-gradient-text {
+            background: linear-gradient(90deg, #2d5a27, #f4b400, #d62828);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .bg-hero {
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.6)), 
+                        url('https://images.unsplash.com/photo-1501386761578-eac5c94b800a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Estilo da Esteira (Carousel) */
+        .artist-scroll-container {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;  /* IE and Edge */
+            padding-bottom: 20px;
+        }
+
+        .artist-scroll-container::-webkit-scrollbar {
+            display: none; /* Chrome, Safari and Opera */
+        }
+
+        .artist-card {
+            scroll-snap-align: center;
+            flex: 0 0 85%; /* No mobile mostra 85% do card para sugerir o próximo */
+            margin-right: 16px;
+        }
+
+        @media (min-width: 768px) {
+            .artist-card {
+                flex: 0 0 45%;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .artist-card {
+                flex: 0 0 19%; /* No desktop mostra todos ou quase todos */
+                scroll-snap-align: start;
+            }
+            .artist-scroll-container {
+                justify-content: center;
+                overflow-x: hidden;
+            }
+        }
+
+        /* Animação de Floating Button */
+        @keyframes bounce-slow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .float-btn {
+            animation: bounce-slow 3s infinite ease-in-out;
+        }
+
+        /* Modais e Lightbox */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            inset: 0;
+            background-color: rgba(0,0,0,0.95);
+            backdrop-filter: blur(8px);
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 200;
+            inset: 0;
+            background-color: rgba(0,0,0,0.95);
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <!-- Navegação -->
+    <nav class="fixed w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-xl md:text-2xl font-bold tracking-tighter">
+                <span class="text-green-600">PROJETO</span> <span class="text-yellow-500">JAMAICA</span>
+            </div>
+            <div class="hidden lg:flex space-x-8 font-semibold text-sm">
+                <a href="#home" class="hover:text-yellow-500 transition">INÍCIO</a>
+                <a href="#historia" class="hover:text-yellow-500 transition">HISTÓRIA</a>
+                <a href="#artistas" class="hover:text-yellow-500 transition">INTEGRANTES</a>
+                <a href="#galeria" class="hover:text-yellow-500 transition">GALERIA</a>
+                <a href="#contato" class="hover:text-yellow-500 transition">CONTATO</a>
+            </div>
+            <a href="https://wa.me/5512999999999?text=Olá! Gostaria de fazer um orçamento para um show do Projeto Jamaica." 
+               class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-full text-xs font-bold transition flex items-center gap-2">
+               <i class="fab fa-whatsapp"></i> <span class="hidden sm:inline">ORÇAMENTO</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="h-screen bg-hero flex flex-col justify-center items-center text-center px-6 relative">
+        <div class="max-w-4xl">
+            <p class="text-yellow-500 font-bold tracking-[0.2em] mb-4 uppercase text-xs md:text-sm reveal">Vibrações de Boiçucanga</p>
+            <h1 class="text-4xl md:text-7xl lg:text-8xl mb-6 leading-tight reveal">Reggae que conecta <span class="block reggae-gradient-text">alma e energia</span></h1>
+            <p class="text-sm md:text-xl text-gray-300 mb-10 max-w-2xl mx-auto reveal">O autêntico som roots para transformar seu evento em um momento inesquecível no Litoral Norte.</p>
+            <div class="reveal">
+                <a href="https://wa.me/5512999999999?text=Olá! Gostaria de fazer um orçamento para um show do Projeto Jamaica." 
+                   class="inline-block bg-green-600 hover:bg-green-700 text-white text-base md:text-lg font-bold px-8 py-4 rounded-full transition-all hover:scale-105 shadow-xl">
+                    Agendar show agora
+                </a>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center opacity-40">
+            <div class="w-6 h-10 border-2 border-white rounded-full flex justify-center p-1">
+                <div class="w-1 h-2 bg-white rounded-full animate-bounce"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- História -->
+    <section id="historia" class="py-20 md:py-32 px-6 bg-[#050505]">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 md:gap-20 items-center">
+            <div class="reveal">
+                <h2 class="text-3xl md:text-5xl mb-8">Nossa <span class="text-yellow-500">Jornada</span></h2>
+                <div class="space-y-6 text-gray-400 leading-relaxed text-sm md:text-lg">
+                    <p>O <strong class="text-white">Projeto Jamaica</strong> nasceu do encontro de músicos apaixonados pela cultura sound system e pelo roots reggae clássico, em meio à natureza exuberante de Boiçucanga.</p>
+                    <p>Nossa música é um manifesto de positividade. Levamos a vibe da praia para qualquer palco, focando na conexão real entre o público e a mensagem de resistência e união que o reggae transmite.</p>
+                </div>
+                <div class="mt-10 flex flex-wrap gap-8">
+                    <div class="border-l-4 border-green-600 pl-4">
+                        <span class="block text-white font-extrabold text-3xl">Litoral</span>
+                        <span class="text-xs text-gray-500">Norte de SP</span>
+                    </div>
+                    <div class="border-l-4 border-red-600 pl-4">
+                        <span class="block text-white font-extrabold text-3xl">Roots</span>
+                        <span class="text-xs text-gray-500">Estilo Puro</span>
+                    </div>
+                </div>
+            </div>
+            <div class="relative reveal order-first md:order-last">
+                <img src="https://images.unsplash.com/photo-1493225255756-d9584f8606e9?auto=format&fit=crop&w=800&q=80" 
+                     class="rounded-3xl shadow-2xl relative z-10 w-full aspect-square md:aspect-auto object-cover">
+                <div class="absolute -top-6 -right-6 w-32 h-32 bg-green-600/10 rounded-full blur-3xl"></div>
+                <div class="absolute -bottom-4 -left-4 w-full h-full border border-yellow-500/20 rounded-3xl -z-10"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Artistas (ESTEIRA) -->
+    <section id="artistas" class="py-20 md:py-32 px-6 bg-[#0a0a0a]">
+        <div class="max-w-7xl mx-auto text-center mb-16 reveal">
+            <h2 class="text-3xl md:text-5xl mb-4">Quem faz o <span class="text-green-600">Som</span></h2>
+            <p class="text-gray-500 text-xs md:text-sm uppercase tracking-widest">Arraste para o lado para conhecer a banda</p>
+        </div>
+
+        <div class="artist-scroll-container reveal">
+            <!-- Artist 1 -->
+            <div class="artist-card" onclick="openModal('vocal')">
+                <div class="relative overflow-hidden rounded-2xl aspect-[3/4] group cursor-pointer border border-white/5">
+                    <img src="https://images.unsplash.com/photo-1520127877037-14fc79609501?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover transition duration-700 grayscale group-hover:grayscale-0 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+                    <div class="absolute bottom-6 left-6">
+                        <h3 class="text-lg text-white">Zeca Roots</h3>
+                        <p class="text-yellow-500 text-xs font-bold uppercase">Voz & Guitarra</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Artist 2 -->
+            <div class="artist-card" onclick="openModal('baixo')">
+                <div class="relative overflow-hidden rounded-2xl aspect-[3/4] group cursor-pointer border border-white/5">
+                    <img src="https://images.unsplash.com/photo-1514525253361-b83f859b73c0?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover transition duration-700 grayscale group-hover:grayscale-0 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+                    <div class="absolute bottom-6 left-6">
+                        <h3 class="text-lg text-white">Mano Brownie</h3>
+                        <p class="text-yellow-500 text-xs font-bold uppercase">Baixo Groove</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Artist 3 -->
+            <div class="artist-card" onclick="openModal('bateria')">
+                <div class="relative overflow-hidden rounded-2xl aspect-[3/4] group cursor-pointer border border-white/5">
+                    <img src="https://images.unsplash.com/photo-1524362666922-64c5d40a0567?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover transition duration-700 grayscale group-hover:grayscale-0 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+                    <div class="absolute bottom-6 left-6">
+                        <h3 class="text-lg text-white">Beto Batera</h3>
+                        <p class="text-yellow-500 text-xs font-bold uppercase">Bateria</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Artist 4 (Novo) -->
+            <div class="artist-card" onclick="openModal('percussao')">
+                <div class="relative overflow-hidden rounded-2xl aspect-[3/4] group cursor-pointer border border-white/5">
+                    <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover transition duration-700 grayscale group-hover:grayscale-0 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+                    <div class="absolute bottom-6 left-6">
+                        <h3 class="text-lg text-white">Tiago Percusa</h3>
+                        <p class="text-yellow-500 text-xs font-bold uppercase">Percussão</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Artist 5 -->
+            <div class="artist-card" onclick="openModal('teclas')">
+                <div class="relative overflow-hidden rounded-2xl aspect-[3/4] group cursor-pointer border border-white/5">
+                    <img src="https://images.unsplash.com/photo-1459749411177-042180ce673c?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover transition duration-700 grayscale group-hover:grayscale-0 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+                    <div class="absolute bottom-6 left-6">
+                        <h3 class="text-lg text-white">Rafa Teclas</h3>
+                        <p class="text-yellow-500 text-xs font-bold uppercase">Teclados</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Galeria -->
+    <section id="galeria" class="py-20 md:py-32 px-6 bg-[#050505]">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-3xl md:text-5xl text-center mb-16 reveal">Vibe <span class="text-red-600">Ao Vivo</span></h2>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 reveal">
+                <div class="col-span-2 row-span-2 overflow-hidden rounded-2xl cursor-pointer" onclick="openLightbox('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1200&q=80')">
+                    <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                </div>
+                <div class="overflow-hidden rounded-2xl cursor-pointer aspect-square" onclick="openLightbox('https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=1200&q=80')">
+                    <img src="https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                </div>
+                <div class="overflow-hidden rounded-2xl cursor-pointer aspect-square" onclick="openLightbox('https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1200&q=80')">
+                    <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                </div>
+                <div class="col-span-2 overflow-hidden rounded-2xl cursor-pointer h-40 md:h-64" onclick="openLightbox('https://images.unsplash.com/photo-1459749411177-042180ce673c?auto=format&fit=crop&w=1200&q=80')">
+                    <img src="https://images.unsplash.com/photo-1459749411177-042180ce673c?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Onde Estamos -->
+    <section id="contato" class="py-20 md:py-32 px-6">
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+            <div class="reveal">
+                <h2 class="text-3xl md:text-5xl mb-6">Estamos no <span class="text-green-600">Litoral</span></h2>
+                <div class="space-y-8 text-gray-400">
+                    <div class="flex items-start gap-5">
+                        <div class="w-12 h-12 bg-green-600/10 rounded-2xl flex items-center justify-center shrink-0 border border-green-600/20">
+                            <i class="fas fa-map-marker-alt text-green-600"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-bold text-lg mb-1">Base em Boiçucanga</h4>
+                            <p class="text-sm">São Sebastião - SP. Onde a magia acontece.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-5">
+                        <div class="w-12 h-12 bg-yellow-500/10 rounded-2xl flex items-center justify-center shrink-0 border border-yellow-500/20">
+                            <i class="fas fa-truck text-yellow-500"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-bold text-lg mb-1">Atendimento Regional</h4>
+                            <p class="text-sm">Levamos nosso reggae para Ubatuba, Caraguatatuba, Ilhabela e São Sebastião.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-12 p-10 bg-white/5 rounded-[32px] border border-white/10 text-center">
+                    <h3 class="text-2xl mb-4 font-bold">Solicite seu Orçamento</h3>
+                    <p class="text-gray-400 mb-8 text-sm">Clique no botão e fale diretamente com a produção no WhatsApp.</p>
+                    <a href="https://wa.me/5512999999999?text=Olá! Gostaria de fazer um orçamento para um show do Projeto Jamaica." 
+                       class="inline-block w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-2xl transition-all shadow-xl shadow-green-900/20">
+                       <i class="fab fa-whatsapp mr-2"></i> Chamar no WhatsApp
+                    </a>
+                </div>
+            </div>
+            
+            <div class="reveal h-[350px] md:h-[550px] rounded-[40px] overflow-hidden border border-white/10 grayscale opacity-80">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14597.106596954203!2d-45.626781!3d-23.7845625!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94d2ba74c3d4f4bf%3A0xe670081d69d0d9d2!2sBoi%C3%A7ucanga%2C%20S%C3%A3o%20Sebasti%C3%A3o%20-%20SP!5e0!3m2!1spt-BR!2sbr!4v1700000000000!5m2!1spt-BR!2sbr" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-16 px-6 border-t border-white/5 bg-black">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
+            <div class="text-center md:text-left">
+                <div class="text-2xl font-bold mb-2">
+                    <span class="text-green-600">PROJETO</span> <span class="text-yellow-500">JAMAICA</span>
+                </div>
+                <p class="text-gray-600 text-xs tracking-widest uppercase">Reggae Roots | Litoral Norte SP</p>
+            </div>
+            
+            <div class="flex gap-6">
+                <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-red-600 transition duration-300 text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-green-600 transition duration-300 text-gray-400 hover:text-white"><i class="fab fa-whatsapp"></i></a>
+                <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-yellow-500 transition duration-300 text-gray-400 hover:text-white"><i class="fab fa-youtube"></i></a>
+            </div>
+            
+            <div class="text-gray-600 text-[10px] font-mono">
+                © 2024 PROJETO JAMAICA. DESIGNED FOR CONVERSION.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Botão Flutuante WhatsApp -->
+    <a href="https://wa.me/5512999999999?text=Olá! Gostaria de fazer um orçamento para um show do Projeto Jamaica." 
+       class="fixed bottom-6 right-6 z-[999] bg-[#25D366] w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center text-white text-3xl shadow-2xl float-btn hover:scale-110 transition duration-300">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Modal Artista -->
+    <div id="artistModal" class="modal" onclick="closeModal()">
+        <div class="max-w-4xl mx-auto mt-10 md:mt-24" onclick="event.stopPropagation()">
+            <div class="bg-[#121212] rounded-[40px] overflow-hidden border border-white/10 flex flex-col md:flex-row">
+                <div class="md:w-1/2 aspect-square md:aspect-auto">
+                    <img id="modalImg" src="" class="w-full h-full object-cover">
+                </div>
+                <div class="md:w-1/2 p-10 md:p-14 relative flex flex-col justify-center">
+                    <button onclick="closeModal()" class="absolute top-8 right-8 text-gray-500 hover:text-white text-3xl">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <span id="modalRole" class="text-yellow-500 font-bold uppercase tracking-[0.2em] text-[10px] mb-4"></span>
+                    <h3 id="modalName" class="text-4xl mb-8 leading-tight"></h3>
+                    <div id="modalBio" class="text-gray-400 leading-relaxed text-sm md:text-base space-y-4"></div>
+                    
+                    <div class="mt-12 flex gap-3">
+                        <div class="w-12 h-1 bg-green-600"></div>
+                        <div class="w-12 h-1 bg-yellow-500"></div>
+                        <div class="w-12 h-1 bg-red-600"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox Galeria -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <div class="p-4 flex items-center justify-center w-full h-full">
+            <img id="lightboxImg" src="" class="max-h-[85vh] max-w-full rounded-xl shadow-2xl transition-all duration-300 scale-95">
+        </div>
+    </div>
+
+    <script>
+        const artistData = {
+            'vocal': {
+                name: 'Zeca Roots',
+                role: 'Voz & Guitarra',
+                img: 'https://images.unsplash.com/photo-1520127877037-14fc79609501?auto=format&fit=crop&w=800&q=80',
+                bio: '<p>Zeca é a voz e a alma do Projeto Jamaica. Com mais de 15 anos de estrada, cresceu ouvindo Bob Marley nas praias de Boiçucanga.</p><p>Sua conexão com a banda é visceral, sendo o principal compositor e o responsável por manter a chama do reggae roots acesa em cada acorde.</p>'
+            },
+            'baixo': {
+                name: 'Mano Brownie',
+                role: 'Baixo Groove',
+                img: 'https://images.unsplash.com/photo-1514525253361-b83f859b73c0?auto=format&fit=crop&w=800&q=80',
+                bio: '<p>O alicerce do nosso som. Brownie traz influências do dub jamaicano clássico, garantindo que as baixas frequências façam o peito do público vibrar.</p>'
+            },
+            'bateria': {
+                name: 'Beto Batera',
+                role: 'Bateria',
+                img: 'https://images.unsplash.com/photo-1524362666922-64c5d40a0567?auto=format&fit=crop&w=800&q=80',
+                bio: '<p>Mestre do One Drop e do Steppers. Beto é pura energia rítmica, combinando a precisão técnica com o balanço orgânico do litoral.</p>'
+            },
+            'percussao': {
+                name: 'Tiago Percusa',
+                role: 'Percussão & FX',
+                img: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80',
+                bio: '<p>Tiago traz o tempero extra para o Projeto Jamaica. Suas batidas no conga e efeitos dão a textura orgânica necessária para um reggae autêntico.</p>'
+            },
+            'teclas': {
+                name: 'Rafa Teclas',
+                role: 'Teclados',
+                img: 'https://images.unsplash.com/photo-1459749411177-042180ce673c?auto=format&fit=crop&w=800&q=80',
+                bio: '<p>Os timbres de Hammond e os "skanks" clássicos passam pelas mãos de Rafa. Ele é o arquiteto sonoro que preenche nossos arranjos com maestria.</p>'
+            }
+        };
+
+        // Scroll Reveal
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        window.onload = reveal;
+
+        // Modal Control
+        function openModal(key) {
+            const artist = artistData[key];
+            document.getElementById('modalName').innerText = artist.name;
+            document.getElementById('modalRole').innerText = artist.role;
+            document.getElementById('modalBio').innerHTML = artist.bio;
+            document.getElementById('modalImg').src = artist.img;
+            document.getElementById('artistModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('artistModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Lightbox Control
+        function openLightbox(src) {
+            const lb = document.getElementById('lightbox');
+            const lbImg = document.getElementById('lightboxImg');
+            lbImg.src = src;
+            lb.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => lbImg.classList.replace('scale-95', 'scale-100'), 10);
+        }
+
+        function closeLightbox() {
+            const lb = document.getElementById('lightbox');
+            const lbImg = document.getElementById('lightboxImg');
+            lbImg.classList.replace('scale-100', 'scale-95');
+            setTimeout(() => {
+                lb.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }, 300);
+        }
+
+        // Smooth Scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
